@@ -4,6 +4,8 @@ import { UserService } from '../../../../core/services/user/user.service';
 import { User } from '../../../../core/models/User';
 import { UserGroup } from '../../../../core/models/UserGroup';
 import { AccessRule } from '../../../../core/models/AccessRule';
+import { MatDialog } from '@angular/material/dialog';
+import { UserItemComponent } from '../user-item/user-item.component';
 
 @Component({
   selector: 'app-user-list',
@@ -25,7 +27,7 @@ export class UserListComponent implements OnInit {
   public accessRules: AccessRule[] = [];
   public accessRulesMap: Map<number, string> = new Map<number, string>();
 
-  constructor(private userService: UserService) {}
+  constructor(public dialog: MatDialog, private userService: UserService) {}
 
   ngOnInit(): void {
     // load master data and create maps
@@ -34,6 +36,25 @@ export class UserListComponent implements OnInit {
 
     // load user list from API
     this.userList$ = this.userService.fetchUsers();
+  }
+
+  /**
+   * trigger when opening user item view
+   * @param action
+   * @param user
+   */
+  public onOpenUserItemView(action: string, user: User | null) {
+    const dialogRef = this.dialog.open(UserItemComponent, {
+      width: '250px',
+      data: {
+        title: action,
+        user: user ? user : new User(),
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('The dialog was closed');
+    });
   }
 
   /**
