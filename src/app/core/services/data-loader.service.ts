@@ -23,10 +23,10 @@ export class DataLoader {
   }
 
   /**
-   * load data list from API
+   * fetch data list from API
    * @param url
    */
-  searchData<T>(url: string): Observable<T[]> {
+  fetchData<T>(url: string): Observable<T[]> {
     // load data using http GET
     return this.http.get<T[]>(this.getResourceUrl(url)).pipe(
       tap((_) => this.log('fetched data list')),
